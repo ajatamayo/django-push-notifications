@@ -82,6 +82,13 @@ class HexIntegerField(six.with_metaclass(models.SubfieldBase, models.BigIntegerF
 		# yes, that super call is right
 		return super(models.IntegerField, self).formfield(**defaults)
 
+	def get_internal_type(self):
+		engine = connection.settings_dict["ENGINE"]
+		if engine == "django.db.backends.mysql":
+			return "PositiveIntegerField"
+		return super(HexIntegerField, self).get_internal_type()
+
+
 try:
 	from south.modelsinspector import add_introspection_rules
 	add_introspection_rules([], ["^push_notifications\.fields\.HexIntegerField"])
